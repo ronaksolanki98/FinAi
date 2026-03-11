@@ -1,0 +1,75 @@
+services:
+  finai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      # Server Configuration
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-3001}
+
+      # Database (Neon PostgreSQL)
+      DATABASE_URL: ${DATABASE_URL}
+
+      # Email Service (Resend)
+      RESEND_API_KEY: ${RESEND_API_KEY}
+
+      # Google OAuth
+      VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+
+      # Optional - Custom ping message
+      PING_MESSAGE: ${PING_MESSAGE:-FinAi Server is running}
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3001/api/ping', (r) => {if (r.statusCode < 500) process.exit(0); process.exit(1)})",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    restart: unless-stopped
+
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 512M
+        reservations:
+          cpus: "1"
+          memory: 256M
+
+    depends_on:
+      - postgres
+
+  # Optional: Local PostgreSQL for development (remove for production with Neon)
+  postgres:
+    image: postgres:16-alpine
+    container_name: finai-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-finai}
+      POSTGRES_USER: ${POSTGRES_USER:-finai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finai_secure_password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-finai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

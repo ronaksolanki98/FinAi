@@ -1,0 +1,16 @@
+{
+  "solankironak423@gmail.com": {
+    "id": "26c4930e46397ca19436fa339834c8f7",
+    "email": "solankironak423@gmail.com",
+    "passwordHash": "106341ed6691d80fa296bb3cee87190c154e6579e048716d28ab5e6a336814ae",
+    "verified": true,
+    "createdAt": "2025-11-26T11:49:17.034Z"
+  },
+  "ronakcc.connect@gmail.com": {
+    "id": "9a0f265d0beff2995f0cb7cc9b15cd2f",
+    "email": "ronakcc.connect@gmail.com",
+    "passwordHash": "00a4db56f2ce464b62915e555aa50fe7a1e4ba2698d1e1bc37d929d9b9a6ee57",
+    "verified": false,
+    "createdAt": "2025-12-07T10:22:24.700Z"
+  }
+}
