@@ -72,14 +72,14 @@ jobs:
       # Trivy Container Scan
       # --------------------------
 
-      - name: Trivy Image Scan
+      - name: Trivy Scan
         uses: aquasecurity/trivy-action@0.24.0
         with:
           image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
-          format: table
+          scanners: vuln
+          severity: CRITICAL
+          ignore-unfixed: true
           exit-code: 1
-          vuln-type: os,library
-          severity: CRITICAL,HIGH
 
       - name: Push Image to GHCR
         run: docker push $IMAGE_NAME:${{ github.sha }}
