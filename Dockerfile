@@ -1,6 +1,6 @@
 # ---------- BUILDER ----------
   FROM node:22-alpine AS builder
-
+  RUN apk update && apk upgrade --no-cache
   RUN npm install -g pnpm
   WORKDIR /app
   
@@ -15,7 +15,7 @@
   
   # ---------- RUNTIME ----------
   FROM node:22-alpine
-  
+  RUN apk update && apk upgrade --no-cache
   RUN npm install -g pnpm
   WORKDIR /app
   
