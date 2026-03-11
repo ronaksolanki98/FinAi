@@ -32,15 +32,18 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Get AKS credentials
-       run: |
+        run: |
           az aks get-credentials \
-          --resource-group finai-rg \
-          --name finai-aks \
-          --overwrite-existing
+            --resource-group finai-rg \
+            --name finai-aks \
+            --overwrite-existing
 
       - name: Deploy to AKS
         run: |
-           kubectl apply -f k8s/deployment.yml
-           kubectl apply -f k8s/service.yml
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
 
-    
+      - name: Verify deployment
+        run: |
+          kubectl get pods
+          kubectl get svc
