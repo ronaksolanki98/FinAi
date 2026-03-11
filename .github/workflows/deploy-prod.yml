@@ -37,3 +37,13 @@ jobs:
             --name finai-app \
             --resource-group finai-rg \
             --image $IMAGE_NAME:${{ github.sha }}
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+           --resource-group finai-rg \
+           --name finai-aks
+
+      - name: Deploy to AKS
+        run: |
+          kubectl set image deployment/finai-app finai=${{ env.IMAGE_NAME }}:${{ github.sha }}

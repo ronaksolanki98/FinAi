@@ -14,12 +14,10 @@ env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
-
   devsecops:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -42,18 +40,18 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      
+
       # --------------------------
       # Snyk Dependency Scan
       # --------------------------
 
       - name: Snyk Scan
-        uses: snyk/actions/node@master
-        with:
-          args: test
+        timeout-minutes: 5
+        uses: snyk/actions/node@v1
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
+        with:
+          command: test
       # --------------------------
       # Build Docker Image
       # --------------------------
