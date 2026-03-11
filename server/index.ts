@@ -4,11 +4,24 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleOCR } from "./routes/ocr";
 import { handleInsights } from "./routes/insights";
-import { handleGmailAuth, handleGmailInvoices, handleDownloadInvoice } from "./routes/gmail";
-import { handleSignup, handleLogin, handleVerifyEmail, handleResendVerification } from "./routes/email-auth";
+import {
+  handleGmailAuth,
+  handleGmailInvoices,
+  handleDownloadInvoice,
+} from "./routes/gmail";
+import {
+  handleSignup,
+  handleLogin,
+  handleVerifyEmail,
+  handleResendVerification,
+} from "./routes/email-auth";
 
 export function createServer() {
   const app = express();
+
+  app.get("/health", (req, res) => {
+    res.status(200).send("OK");
+  });
 
   // Middleware
   app.use(cors());
