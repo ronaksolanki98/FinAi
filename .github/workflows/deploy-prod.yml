@@ -14,14 +14,14 @@ env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
-    environment: production
+
+    environment:
+      name: production
 
     steps:
-
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Azure Login
@@ -31,7 +31,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy Container App
+      - name: Deploy to Azure Container App
         run: |
           az containerapp update \
             --name finai-app \
