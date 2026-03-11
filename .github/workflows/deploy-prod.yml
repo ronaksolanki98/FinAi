@@ -31,19 +31,16 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy to Azure Container App
-        run: |
-          az containerapp update \
-            --name finai-app \
-            --resource-group finai-rg \
-            --image $IMAGE_NAME:${{ github.sha }}
-
       - name: Get AKS credentials
-        run: |
+       run: |
           az aks get-credentials \
-           --resource-group finai-rg \
-           --name finai-aks
+          --resource-group finai-rg \
+          --name finai-aks \
+          --overwrite-existing
 
       - name: Deploy to AKS
         run: |
-          kubectl set image deployment/finai-app finai=${{ env.IMAGE_NAME }}:${{ github.sha }}
+           kubectl apply -f k8s/deployment.yml
+           kubectl apply -f k8s/service.yml
+
+    
