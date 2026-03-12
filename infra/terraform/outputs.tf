@@ -1,6 +1,7 @@
-output "container_app_url" {
-  value = azurerm_container_app.app.latest_revision_fqdn
-}
 output "aks_cluster_name" {
   value = azurerm_kubernetes_cluster.aks.name
+}
+
+output "resource_group_name" {
+  value = azurerm_resource_group.rg.name
 }

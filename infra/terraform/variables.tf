@@ -1,32 +1,47 @@
 variable "location" {
-  default = "East US"
+  description = "Azure region for all resources"
+  type        = string
+  default     = "centralindia"
 }
 
 variable "resource_group_name" {
-  default = "finai-rg"
+  description = "Azure Resource Group Name"
+  type        = string
+  default     = "finai-rg"
 }
 
-variable "container_app_name" {
-  default = "finai-app"
+variable "aks_cluster_name" {
+  description = "AKS Cluster Name"
+  type        = string
+  default     = "finai-aks"
 }
 
 variable "github_image" {
-  description = "Docker image stored in GHCR"
+  description = "Docker image stored in GitHub Container Registry"
+  type        = string
   default     = "ghcr.io/ronak-cn-98/fin.ai-3tier:latest"
 }
 
 variable "database_url" {
-  sensitive = true
+  description = "Database connection string"
+  type        = string
+  sensitive   = true
 }
 
 variable "resend_api_key" {
-  sensitive = true
+  description = "Resend email API key"
+  type        = string
+  sensitive   = true
 }
 
 variable "google_client_id" {
-  sensitive = true
+  description = "Google OAuth client id"
+  type        = string
+  sensitive   = true
 }
 
 variable "google_client_secret" {
-  sensitive = true
+  description = "Google OAuth client secret"
+  type        = string
+  sensitive   = true
 }
