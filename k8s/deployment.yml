@@ -13,7 +13,19 @@ spec:
         app: finai
     spec:
       containers:
-      - name: finai
-        image: ghcr.io/ronak-cn-98/fin.ai-3tier:latest
-        ports:
-        - containerPort: 8080
+        - name: finai
+          image: ghcr.io/ronak-cn-98/fin.ai-3tier:912b367bafcea6f09bb34314a6c52a4f487512b1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://neondb_owner:npg_GlTe4A8LMmXJ@ep-wild-frog-advjuv90-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+            - name: GOOGLE_CLIENT_ID
+              value: "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"
+
+            - name: GOOGLE_CLIENT_SECRET
+              value: "****3By-"
+
+            - name: RESEND_API_KEY
+              value: "re_AT27kHsD_EjeFGcV1E26YLiZiv6ovNZHM"

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: finai-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+
+  tls:
+    - hosts:
+        - finaiweb.online
+      secretName: finai-tls
+
+  rules:
+    - host: finaiweb.online
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: finai-service
+                port:
+                  number: 80
