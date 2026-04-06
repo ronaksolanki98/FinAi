@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+.pnpm
+.env
+.env.local
+.env.*
+Dockerfile*
+docker-compose*.yml
+.git
+README.md

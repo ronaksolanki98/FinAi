@@ -7,20 +7,20 @@ export default defineConfig(() => ({
     host: "::",
     port: 8080,
     fs: {
-      allow: ["./client", "./shared"],
-      deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
+      allow: [".", "./app/client", "./app/shared"],
+      deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "app/server/**"],
     },
   },
   build: {
     outDir: "dist/spa",
   },
   plugins: [react(), expressPlugin()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./app/client"),
+        "@shared": path.resolve(__dirname, "./app/shared"),
+      },
     },
-  },
 }));
 
 function expressPlugin(): Plugin {
@@ -28,7 +28,7 @@ function expressPlugin(): Plugin {
     name: "express-plugin",
     apply: "serve", // only dev mode
     async configureServer(server) {
-      const { createServer } = await import("./server/index.js");
+      const { createServer } = await import("./app/server/index.js");
       const app = createServer();
       server.middlewares.use(app);
     },

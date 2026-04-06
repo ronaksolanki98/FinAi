@@ -16,7 +16,7 @@
     "build:client": "vite build",
     "build:server": "vite build --config vite.config.server.ts",
     "start": "node dist/server/node-build.mjs",
-    "init-db": "tsx server/init-db.ts",
+    "init-db": "tsx app/server/init-db.ts",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"

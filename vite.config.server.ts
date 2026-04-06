@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, "server/node-build.ts"),
+      entry: path.resolve(__dirname, "app/server/node-build.ts"),
       name: "server",
       fileName: "production",
       formats: ["es"],
@@ -41,12 +41,12 @@ export default defineConfig({
     minify: false, // Keep readable for debugging
     sourcemap: true,
   },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./app/client"),
+        "@shared": path.resolve(__dirname, "./app/shared"),
+      },
     },
-  },
   define: {
     "process.env.NODE_ENV": '"production"',
   },

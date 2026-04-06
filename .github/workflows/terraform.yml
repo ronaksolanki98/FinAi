@@ -1,3 +1,110 @@
-/*#azure infra will 
+name: Terraform Controlled Pipeline
 
-be deployed#*/
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  TF_WORKING_DIR: infra/terraform
+
+jobs:
+  terraform:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+    steps:
+      # 1. Checkout
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      # 3. Azure Login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # 4. Init
+      - name: Terraform Init
+        run: terraform init
+
+      # 5. Format check
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      # 6. Validate
+      - name: Terraform Validate
+        run: terraform validate
+
+      # 7. Plan
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      # 8. Upload plan
+      - name: Upload Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: infra/terraform/tfplan
+
+
+  snyk-iac:
+    name: Snyk IaC Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Snyk IaC
+        uses: snyk/actions/iac@master
+        with:
+          path: infra/terraform
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # Fail only on high severity
+      - name: Fail on High Severity
+        run: snyk iac test infra/terraform --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+
+  terraform-apply:
+    name: Terraform Apply (Manual Controlled)
+    runs-on: ubuntu-latest
+    needs: terraform
+    if: github.ref == 'refs/heads/main'
+
+    defaults:
+      run:
+        working-directory: infra/terraform
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
