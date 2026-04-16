@@ -6,6 +6,11 @@ on:
     branches:
       - main
 
+# 🔐 Required for Azure auth (important for future OIDC as well)
+permissions:
+  id-token: write
+  contents: read
+
 env:
   TF_WORKING_DIR: infra/terraform
 
@@ -29,25 +34,25 @@ jobs:
         with:
           terraform_version: 1.6.6
 
-      # 3. Azure Login
+      # 3. Azure Login (FIXED)
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 4. Init
+      # 4. Terraform Init
       - name: Terraform Init
         run: terraform init
 
-      # 5. Format check
+      # 5. Terraform Format
       - name: Terraform Format
         run: terraform fmt -check
 
-      # 6. Validate
+      # 6. Terraform Validate
       - name: Terraform Validate
         run: terraform validate
 
-      # 7. Plan
+      # 7. Terraform Plan
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
@@ -98,6 +103,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      # Azure Login (FIXED)
       - name: Azure Login
         uses: azure/login@v1
         with:
